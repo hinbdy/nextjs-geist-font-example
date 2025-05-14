@@ -1,0 +1,44 @@
+body {
+  font-family: sans-serif;
+  background: #e0f0ff;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 80%;
+  margin: auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+}
+
+form {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.gender, .aktivitas {
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  background-color: rgb(19, 153, 88);
+  padding: 10px;
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+}
