@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GiziLa - Sistem Informasi Gizi Harian</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f8ff;
+      scroll-behavior: smooth;
+    }
+
+    header {
+      background-color: #128C7E;
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin-bottom: 10px;
+    }
+
+    .intro {
+      text-align: center;
+      padding: 40px 20px;
+      background-color: #e0f7fa;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin: 30px auto;
+      padding: 30px;
+      background-color: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      max-width: 900px;
+      justify-content: center;
+    }
+
+    .section {
+      flex: 1 1 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input, select, button {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .gender-buttons, .activity-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .gender-buttons button,
+    .activity-buttons button {
+      flex: 1;
+      border: 2px solid #1d3557;
+      background-color: #ffffff;
+      color: #1d3557;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .gender-buttons button.active,
+    .activity-buttons button.active {
+      background-color: #1d3557;
+      color: #ffffff;
+    }
+
+    #calculateBtn, #hitungGiziBtn {
+      background-color: #128C7E;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .result, .resultGizi {
+      margin: 30px auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 700px;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .logo {
+      margin: 40px auto;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color:rgb(19, 153, 88);
+    }
+
+    .logo img {
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Selamat Datang di GiziLa</h1>
+    <p>Sistem Informasi Gizi Harian dan Indeks Massa Tubuh</p>
+  </header>
+
+  <div class="intro">
+    <h2>Kenali Kebutuhan Gizi Anda</h2>
+    <p>Dengan GiziLa, Anda bisa menghitung indeks massa tubuh dan kebutuhan kalori harian berdasarkan aktivitas Anda.</p>
+  </div>
+
+  <!-- KALKULATOR MASSA TUBUH -->
+  <div class="container" id="imtForm">
+    <div class="section">
+      <label for="nama">Nama</label>
+      <input type="text" id="nama" placeholder="Masukkan nama Anda">
+
+      <label for="usia">Usia</label>
+      <input type="number" id="usia" placeholder="Masukkan usia">
+
+      <label for="pekerjaan">Pekerjaan</label>
+      <select id="pekerjaan">
+        <option value="lainnya">Lainnya</option>
+        <option value="mahasiswa">Mahasiswa</option>
+        <option value="karyawan">Karyawan</option>
+      </select>
+
+      <label>Jenis Kelamin</label>
+      <div class="gender-buttons">
+        <button id="maleBtn">Laki-laki</button>
+        <button id="femaleBtn">Perempuan</button>
+      </div>
+    </div>
+    <div class="section">
+      <label for="berat">Berat Badan (kg)</label>
+      <input type="number" id="berat">
+
+      <label for="tinggi">Tinggi Badan (cm)</label>
+      <input type="number" id="tinggi">
+
+      <label>Tingkat Aktivitas</label>
+      <div class="activity-buttons">
+        <button data-activity="tidak aktif">Tidak Aktif</button>
+        <button data-activity="sedang">Sedikit Aktif</button>
+        <button data-activity="tinggi">Cukup Aktif</button>
+        <button data-activity="sangat tinggi">Sangat Aktif</button>
+      </div>
+
+      <button id="calculateBtn">Hitung</button>
+    </div>
+  </div>
+
+  <div id="imtResult" class="result hidden"></div>
+
+  <div id="giziTrigger" class="result hidden">
+    <button id="hitungGiziBtn">Hitung Gizi Harian Anda</button>
+  </div>
+
+  <div id="giziResult" class="resultGizi hidden"></div>
+
+  <div class="logo">
+    <img src="https://cdn-icons-png.flaticon.com/512/135/135620.png" alt="logo" width="24"> GIZILA
+  </div>
+
+  <script>
+    let gender = '';
+    let activity = '';
+
+    document.getElementById('maleBtn').addEventListener('click', () => {
+      gender = 'male';
+      maleBtn.classList.add('active');
+      femaleBtn.classList.remove('active');
+    });
+
+    document.getElementById('femaleBtn').addEventListener('click', () => {
+      gender = 'female';
+      femaleBtn.classList.add('active');
+      maleBtn.classList.remove('active');
+    });
+
+    document.querySelectorAll('.activity-buttons button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.activity-buttons button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activity = btn.getAttribute('data-activity');
+      });
+    });
+
+    document.getElementById('calculateBtn').addEventListener('click', () => {
+      const berat = parseFloat(document.getElementById('berat').value);
+      const tinggi = parseFloat(document.getElementById('tinggi').value) / 100;
+
+      if (!berat || !tinggi || !gender || !activity) {
+        alert('Mohon lengkapi semua data.');
+        return;
+      }
+
+      const bmi = berat / (tinggi * tinggi);
+      let status = '';
+      if (bmi < 18.5) status = 'Kurus';
+      else if (bmi < 25) status = 'Normal';
+      else if (bmi < 30) status = 'Kelebihan Berat';
+      else status = 'Obesitas';
+
+      const ideal = 22 * (tinggi * tinggi);
+      const selisih = berat - ideal;
+
+      const result = document.getElementById('imtResult');
+      result.classList.remove('hidden');
+      result.innerHTML = `
+        <h2>Hasil Indeks Massa Tubuh</h2>
+        <p><strong>BMI:</strong> ${bmi.toFixed(2)}</p>
+        <p><strong>Status:</strong> ${status}</p>
+        <p><strong>Berat Ideal:</strong> ${ideal.toFixed(1)} kg</p>
+        <p><strong>Selisih Berat:</strong> ${selisih.toFixed(1)} kg</p>
+      `;
+
+      document.getElementById('giziTrigger').classList.remove('hidden');
+      document.getElementById('giziTrigger').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    document.getElementById('hitungGiziBtn').addEventListener('click', () => {
+      const berat = parseFloat(document.getElementById('berat').value);
+      const tinggi = parseFloat(document.getElementById('tinggi').value);
+      const usia = parseFloat(document.getElementById('usia').value);
+
+      if (!berat || !tinggi || !usia || !gender || !activity) {
+        alert('Mohon lengkapi semua data.');
+        return;
+      }
+
+      let bmr = 0;
+      if (gender === 'male') {
+        bmr = 66.5 + (13.75 * berat) + (5.003 * tinggi) - (6.75 * usia);
+      } else {
+        bmr = 655.1 + (9.563 * berat) + (1.850 * tinggi) - (4.676 * usia);
+      }
+
+      let faktorAktivitas = {
+        "tidak aktif": 1.2,
+        "sedang": 1.375,
+        "tinggi": 1.55,
+        "sangat tinggi": 1.725
+      }[activity];
+
+      const kalori = bmr * faktorAktivitas;
+
+      const giziResult = document.getElementById('giziResult');
+      giziResult.classList.remove('hidden');
+      giziResult.innerHTML = `
+        <h2>Kebutuhan Gizi Harian</h2>
+        <p><strong>BMR:</strong> ${bmr.toFixed(2)} kalori</p>
+        <p><strong>Total Kalori Harian:</strong> ${kalori.toFixed(2)} kalori</p>
+        <p><em>Perhitungan menggunakan rumus Harris-Benedict berdasarkan aktivitas Anda.</em></p>
+      `;
+
+      giziResult.scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
